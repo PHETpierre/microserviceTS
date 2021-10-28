@@ -1,0 +1,19 @@
+{
+  "name": "microservicets",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PHETpierre/microserviceTS.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PHETpierre/microserviceTS/issues"
+  },
+  "homepage": "https://github.com/PHETpierre/microserviceTS#readme"
+}
