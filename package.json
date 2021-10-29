@@ -17,7 +17,7 @@
   },
   "scripts": {
     "test": "jest",
-    "start": "node."
+    "start": "node ."
   },
   "name": "microservicets",
   "description": "",
