@@ -39,6 +39,8 @@ function startWorker(){
      console.log("[AMQP] channel closed");
    });
 
+   //ch.assertExchange('', 'direct');
+
    ch.prefetch(10);
    ch.assertQueue("notification", { durable: true }, function(err:any, _ok:any) {
      if (closeOnErr(err)) return;
@@ -70,13 +72,17 @@ function closeOnErr(err:any) {
 }
 
 let listUser = new Array();
+let subject = '';
+let content = '';
+
 const work = function work(msg:any, cb:any) {
-  console.log("Got msg ", msg.content);
   msg = JSON.parse(msg.content);
-  msg.dealStakeholders.forEach((element:any) => {
+  console.log("Got msg ", msg);
+  msg.users.forEach((element:any) => {
     listUser.push(element);
   });
-  console.log("Got msg ", msg);
+  subject = msg.subject;
+  content = msg.content;
   cb(true);
 }
 
@@ -84,17 +90,25 @@ function getFullName(user:any){
   return user.firstName+'.'+user.lastName
 }
 
-start();
+// let msg = {
+//   content: "A new deal has been initialized with deal's code: 081e910d-f43c-4fc0-9710-435dc154070b",
+//   subject: 'A new deal has been initialized',
+//   users: [
+//     { firstName: 'Astrid', lastName: 'Passot', role: 'DEALER' },
+//     { firstName: 'Said', lastName: 'Kabene', role: 'DEALER' }
+//   ]
+// };
+//work(msg, null);
 
-// let msg:string = '{"zone":"ASIA","dealCreator":{"firstName":"Quan","lastName":"Nguyen","role":"SENDER"},"dealStakeholders":[{"firstName":"Astrid","lastName":"Passot","role":"DEALER"},{"firstName":"Said","lastName":"Kabene","role":"DEALER"}],"code":"LHAJEZJEHZJ","name":"test","amount":200000.0,"currency":"USD"}';
-// work(msg, null);
-//
-// listUser.forEach(async (element:any) => {
-//   try {
-//     let email:string = await getUserEmail(element.lastName, element.firstName);
-//     mailSender(email, '', '');
-//   } catch (error) {
-//     console.log(error);
-//   }
-// });
+listUser.forEach(async (element:any) => {
+  //console.log(element.lastName, element.firstName, subject, content);
+  try {
+    let email:string = await getUserEmail(element.lastName, element.firstName);
+    mailSender(email, subject, content);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+start();
 export default { work, start };
