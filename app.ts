@@ -25,8 +25,7 @@ function getUserEmail(lastname,firstname)
 			console.log(xhr.status)
 			if (xhr.readyState == 4 && xhr.status == 201)
 			{
-				console.log("ok")
-				resolve(JSON.parse(xhr.response));
+				resolve(JSON.parse(xhr.response).data.mail);
 			}
 			else if (xhr.readyState == 4 && xhr.status != 201)
 			{
@@ -70,7 +69,9 @@ async function mailSender()
 
 async function main()
 {
-	return await getUserEmail("TOTO","TOTO");
+	let resultat = await getUserEmail("TOTO","TOTO");
+	console.log(resultat);
+	return resultat;
 }
 
 app.get("/", (req, response) => {
