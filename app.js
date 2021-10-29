@@ -1,7 +1,8 @@
-
 const XMLHttpRequest = require('xhr2');
 const express = require("express");
 const nodemailer = require("nodemailer");
+const start = require("./Messaging.ts")
+
 
 let app = express();
 app.use(express.urlencoded({ extended: true }));
@@ -66,13 +67,8 @@ async function mailSender()
 	});
 }
 
-async function main()
-{
-	console.log(await getUserEmail("TOTO","TOTO"));
-}
-
 app.get("/", (req, response) => {
-	main();
+	start();
 	response.status(200).send("ok");
 })
 
