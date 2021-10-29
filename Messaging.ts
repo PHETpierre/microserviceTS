@@ -1,5 +1,6 @@
 //import config from './RabbitMqConfig';
-import amqp from 'amqplib/callback_api';
+//import amqp from 'amqplib/callback_api';
+const amqp = require('amqplib/callback_api')
 const { getUserEmail, mailSender } = require('./UserProvider');
 
 var amqpConn:any = null;
