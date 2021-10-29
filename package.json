@@ -16,13 +16,12 @@
     "typescript": "^4.4.4"
   },
   "scripts": {
-<<<<<<< HEAD
-    "test": "jest"
+    "test": "jest",
+    "start": "node ."
   },
   "name": "microservicets",
   "description": "",
   "version": "1.0.0",
-  "main": "ServiceMail.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/PHETpierre/microserviceTS.git"
@@ -34,9 +33,3 @@
   },
   "homepage": "https://github.com/PHETpierre/microserviceTS#readme"
 }
-=======
-    "test": "jest",
-    "start": "node ."
-  }
-}
->>>>>>> 1dc3850989ee20c4234ed67d4aa3ea3bf8d52c09
