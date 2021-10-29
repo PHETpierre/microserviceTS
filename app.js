@@ -1,7 +1,7 @@
 const XMLHttpRequest = require('xhr2');
 const express = require("express");
 const nodemailer = require("nodemailer");
-const start = require("./Messaging.js")
+const start = require("./Messaging.js").start
 
 let app = express();
 app.use(express.urlencoded({ extended: true }));
