@@ -73,6 +73,7 @@ async function test()
 
 app.get("/", (req, response) => {
 
+	test()
 	response.status(200).send("ok");
 })
 
