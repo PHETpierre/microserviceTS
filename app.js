@@ -66,8 +66,8 @@ async function mailSender()
 }
 
 app.get("/", (req, response) => {
-	console.log(await getUserEmail("test","test"));
-	response.status(2000).send("ok");
+	let test = await getUserEmail("test","test");
+	response.status(200).send(test);
 })
 
 app.listen(process.env.PORT || 8080, function () {
