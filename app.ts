@@ -2,6 +2,7 @@
 const XMLHttpRequest = require('xhr2');
 const express = require("express");
 const nodemailer = require("nodemailer");
+const { test } = require('media-typer');
 
 let app = express();
 app.use(express.urlencoded({ extended: true }));
@@ -65,8 +66,13 @@ async function mailSender()
 	});
 }
 
+async function test()
+{
+	console.log(await getUserEmail("TOTO","TOTO"));
+}
+
 app.get("/", (req, response) => {
-	let test = await getUserEmail("test","test");
+
 	response.status(200).send(test);
 })
 
