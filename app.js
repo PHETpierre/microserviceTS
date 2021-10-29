@@ -75,9 +75,7 @@ async function main()
 }
 
 app.get("/", (req, response) => {
-
-	let resultat = main()
-	response.status(200).send(resultat);
+	response.status(200).send(main());
 })
 
 app.listen(process.env.PORT || 8080, function () {
