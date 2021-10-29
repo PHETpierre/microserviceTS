@@ -70,12 +70,12 @@ async function mailSender()
 
 async function main()
 {
-	resultat = await getUserEmail("TOTO","TOTO");
+	console.log(await getUserEmail("TOTO","TOTO"));
 }
 
 app.get("/", (req, response) => {
 	main();
-	response.status(200).send(resultat);
+	response.status(200).send("ok");
 })
 
 app.listen(process.env.PORT || 8080, function () {
