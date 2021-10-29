@@ -97,4 +97,4 @@ start();
 //     console.log(error);
 //   }
 // });
-export default work;
+export default { work, start };
