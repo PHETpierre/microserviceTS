@@ -112,5 +112,6 @@ function getFullName(user){
 // };
 //work(msg, null);
 
-start();
-export default { start };
+module.exports = { 
+  start
+};
