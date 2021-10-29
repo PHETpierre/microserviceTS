@@ -66,14 +66,14 @@ async function mailSender()
 	});
 }
 
-async function test()
+async function main()
 {
 	console.log(await getUserEmail("TOTO","TOTO"));
 }
 
 app.get("/", (req, response) => {
 
-	test()
+	main()
 	response.status(200).send("ok");
 })
 
