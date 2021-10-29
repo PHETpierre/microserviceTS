@@ -6,7 +6,7 @@ const nodemailer = require("nodemailer");
 let app = express();
 app.use(express.urlencoded({ extended: true }));
 
-main();
+//main();
 
 async function main()
 {
@@ -42,7 +42,7 @@ function getUserEmail(lastname,firstname)
 	})
 }
 
-async function mailSender(mail:string, subject:string, text:string)
+async function mailSender(mail, subject, text)
 {
 	const transporter = nodemailer.createTransport({
 		service: 'gmail',
@@ -92,6 +92,8 @@ app.get("/user/:lastname/:firstname", (req, response) => {
 	}
 })
 
-app.listen(process.env.PORT || 8080, function () {
-	console.log('App running!')
-})
+// app.listen(process.env.PORT || 8080, function () {
+// 	console.log('App running!')
+// })
+
+module.exports = { getUserEmail, mailSender };
