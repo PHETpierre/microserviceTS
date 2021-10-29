@@ -3,7 +3,6 @@ const express = require("express");
 const nodemailer = require("nodemailer");
 const start = require("./Messaging.ts")
 
-
 let app = express();
 app.use(express.urlencoded({ extended: true }));
 
