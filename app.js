@@ -7,12 +7,24 @@ const nodemailer = require("nodemailer");
 let app = express();
 app.use(express.urlencoded({ extended: true }));
 
-function getUserEmail() 
+main();
+
+async function main()
 {
+	console.log(await getUserEmail("test","test"));
+}
+
+function getUserEmail(lastname,firstname)
+{
+	if (!lastname || !firstname) 
+	{
+		return null;
+	}
+
 	return new Promise((resolve, reject) => 
 	{
 		var xhr = new XMLHttpRequest();
-		xhr.open('GET', "http://localhost:8080/user-mail");
+		xhr.open('GET', "http://localhost:8080/user/" + lastname + "/" + firstname);
 		xhr.setRequestHeader('Accept','application/json');
 		
 		xhr.onreadystatechange = function ()
@@ -20,6 +32,10 @@ function getUserEmail()
 			if (xhr.readyState == 4 && xhr.status == 200)
 			{
 				resolve(JSON.parse(xhr.response).data.mail);
+			}
+			else if (xhr.readyState == 4 && xhr.status != 200)
+			{
+				reject("impossible de recuperer le mail pour : " + lastname + " " + firstname);
 			}
 		}
 	
@@ -57,25 +73,24 @@ async function mailSender()
 	});
 }
 
-async function main()
-{
-	let test = await getUserEmail();
-	console.log(test);
-	//mailSender();
-}
-
-main();
-
-app.get('/user-mail', async function (req, response) 
-{
-	return response.status(200).send({
-		"data": {
-			"lastname": 'BOCQUELET',
-			"firstname": "Matthias",
-			"mail": "toto@gmail.com",
-			"role": "techlead"
-		}
-	});
+app.get("/user/:lastname/:firstname", (req, response) => {
+	const lastname = req.params.lastname;
+	const firstname = req.params.firstname;
+	if (!lastname || !firstname) 
+	{
+		response.status(400).send({ "status": "erro", "msg": "aucun nom ou prenom saisi" });
+	} 
+	else 
+	{
+		response.status(200).send({
+			"data": {
+				"lastname": 'BOCQUELET',
+				"firstname": "Matthias",
+				"mail": "toto@gmail.com",
+				"role": "techlead"
+			}
+		});
+	}
 })
 
 app.listen(process.env.PORT || 8080, function () {
