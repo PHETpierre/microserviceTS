@@ -83,6 +83,17 @@ const work = function work(msg:any, cb:any) {
   });
   subject = msg.subject;
   content = msg.content;
+
+  listUser.forEach(async (element:any) => {
+    //console.log(element.lastName, element.firstName, subject, content);
+    try {
+      let email:string = await getUserEmail(element.lastName, element.firstName);
+      mailSender(email, subject, content);
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
   cb(true);
 }
 
@@ -99,16 +110,6 @@ function getFullName(user:any){
 //   ]
 // };
 //work(msg, null);
-
-listUser.forEach(async (element:any) => {
-  //console.log(element.lastName, element.firstName, subject, content);
-  try {
-    let email:string = await getUserEmail(element.lastName, element.firstName);
-    mailSender(email, subject, content);
-  } catch (error) {
-    console.log(error);
-  }
-});
 
 start();
 export default { work, start };
