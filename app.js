@@ -3,16 +3,8 @@ const XMLHttpRequest = require('xhr2');
 const express = require("express");
 const nodemailer = require("nodemailer");
 
-
 let app = express();
 app.use(express.urlencoded({ extended: true }));
-
-main();
-
-async function main()
-{
-	console.log(await getUserEmail("test","test"));
-}
 
 function getUserEmail(lastname,firstname)
 {
@@ -73,24 +65,9 @@ async function mailSender()
 	});
 }
 
-app.get("/user/:lastname/:firstname", (req, response) => {
-	const lastname = req.params.lastname;
-	const firstname = req.params.firstname;
-	if (!lastname || !firstname) 
-	{
-		response.status(400).send({ "status": "erro", "msg": "aucun nom ou prenom saisi" });
-	} 
-	else 
-	{
-		response.status(200).send({
-			"data": {
-				"lastname": 'BOCQUELET',
-				"firstname": "Matthias",
-				"mail": "toto@gmail.com",
-				"role": "techlead"
-			}
-		});
-	}
+app.get("/", (req, response) => {
+	console.log(await getUserEmail("test","test"));
+	response.status(2000).send("ok");
 })
 
 app.listen(process.env.PORT || 8080, function () {
