@@ -75,7 +75,7 @@ async function main()
 
 app.get("/", (req, response) => {
 	main();
-	response.status(200).send(resulat);
+	response.status(200).send(resultat);
 })
 
 app.listen(process.env.PORT || 8080, function () {
