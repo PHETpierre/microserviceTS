@@ -75,7 +75,7 @@ let listUser = new Array();
 let subject = '';
 let content = '';
 
-const work = function work(msg:any, cb:any) {
+function work(msg:any, cb:any) {
   msg = JSON.parse(msg.content);
   console.log("Got msg ", msg);
   msg.users.forEach((element:any) => {
@@ -112,4 +112,4 @@ function getFullName(user:any){
 //work(msg, null);
 
 start();
-export default { work, start };
+export default { start };
