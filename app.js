@@ -3,7 +3,6 @@ const XMLHttpRequest = require('xhr2');
 const express = require("express");
 const nodemailer = require("nodemailer");
 
-
 let app = express();
 app.use(express.urlencoded({ extended: true }));
 
@@ -16,17 +15,17 @@ async function main()
 
 function getUserEmail(lastname,firstname)
 {
-	if (!lastname || !firstname) 
+	if (!lastname || !firstname)
 	{
 		return null;
 	}
 
-	return new Promise((resolve, reject) => 
+	return new Promise((resolve, reject) =>
 	{
 		var xhr = new XMLHttpRequest();
 		xhr.open('GET', "http://localhost:8080/user/" + lastname + "/" + firstname);
 		xhr.setRequestHeader('Accept','application/json');
-		
+
 		xhr.onreadystatechange = function ()
 		{
 			if (xhr.readyState == 4 && xhr.status == 200)
@@ -38,13 +37,13 @@ function getUserEmail(lastname,firstname)
 				reject("impossible de recuperer le mail pour : " + lastname + " " + firstname);
 			}
 		}
-	
+
 		xhr.send();
 	})
 }
 
-async function mailSender() 
-{  
+async function mailSender()
+{
 	const transporter = nodemailer.createTransport({
 		service: 'gmail',
 		auth: {
@@ -52,21 +51,21 @@ async function mailSender()
 		  pass: 'cfainsta2021'
 		}
 	  });
-	  
+
 	const mailOptions = {
 		from: 'notification.microservices@gmail.com',
 		to: 'notification.microservices@gmail.com',
 		subject: 'Invoices due',
 		text: 'Dudes, we really need your money.'
 	};
-	  
+
 	transporter.sendMail(mailOptions, function(error, info)
 	{
-		if (error) 
+		if (error)
 		{
 			console.log(error);
-		} 
-		else 
+		}
+		else
 		{
 			console.log('Email sent: ' + info.response);
 		}
@@ -76,11 +75,11 @@ async function mailSender()
 app.get("/user/:lastname/:firstname", (req, response) => {
 	const lastname = req.params.lastname;
 	const firstname = req.params.firstname;
-	if (!lastname || !firstname) 
+	if (!lastname || !firstname)
 	{
 		response.status(400).send({ "status": "erro", "msg": "aucun nom ou prenom saisi" });
-	} 
-	else 
+	}
+	else
 	{
 		response.status(200).send({
 			"data": {
