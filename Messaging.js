@@ -5,35 +5,46 @@ const { getUserEmail, mailSender } = require('./UserProvider');
 
 var amqpConn = null;
 
-function start(){
-  amqp.connect('amqps://jjixgyfe:KI1ImGKoJZs0NNByfOHEJGnV3UbyI339@rat.rmq2.cloudamqp.com/jjixgyfe', function(err, conn) {
-    if (err) {
+function start()
+{
+  amqp.connect('amqps://jjixgyfe:KI1ImGKoJZs0NNByfOHEJGnV3UbyI339@rat.rmq2.cloudamqp.com/jjixgyfe', function(err, conn) 
+  {
+    if (err) 
+    {
       console.error("[AMQP]", err.message);
     }
+
     conn.on("error", function(err) {
-      if (err.message !== "Connection closing") {
+      if (err.message !== "Connection closing") 
+      {
         console.error("[AMQP] conn error", err.message);
       }
     });
+
     conn.on("close", function() {
       console.error("[AMQP] reconnecting");
       return setTimeout(start, 1000);
     });
+
     console.log("[AMQP] connected");
     amqpConn = conn;
     whenConnected();
   });
 }
 
-function whenConnected() {
+function whenConnected() 
+{
   startWorker();
 }
 
-function startWorker(){
-  amqpConn.createChannel(function(err, ch) {
+function startWorker()
+{
+  amqpConn.createChannel(function(err, ch) 
+  {
    if (closeOnErr(err)) return;
+   
    ch.on("error", function(err) {
-     console.error("[AMQP] channel error", err.message);
+    console.error("[AMQP] channel error", err.message);
    });
 
    ch.on("close", function() {
@@ -43,21 +54,27 @@ function startWorker(){
    //ch.assertExchange('', 'direct');
 
    ch.prefetch(10);
-   ch.assertQueue("notification", { durable: true }, function(err, _ok) {
+   ch.assertQueue("notification", { durable: true }, function(err, _ok) 
+   {
      if (closeOnErr(err)) return;
      //ch.bindQueue(_ok.queue, 'deal', 'notification');
      ch.consume("notification", processMsg, { noAck: false });
      console.log("Worker is started");
    });
 
-   function processMsg(msg) {
-     work(msg, function(ok) {
-       try {
+   function processMsg(msg) 
+   {
+     work(msg, function(ok) 
+     {
+       try 
+       {
          if (ok)
            ch.ack(msg);
          else
            ch.reject(msg, true);
-       } catch (e) {
+       } 
+       catch (e) 
+       {
          closeOnErr(e);
        }
      });
@@ -65,14 +82,16 @@ function startWorker(){
  });
 }
 
-function closeOnErr(err) {
+function closeOnErr(err) 
+{
   if (!err) return false;
   console.error("[AMQP] error", err);
   amqpConn.close();
   return true;
 }
 
-function work(msg, cb) {
+function work(msg, cb) 
+{
   let listUser = new Array();
   let subject = '';
   let content = '';
@@ -85,21 +104,20 @@ function work(msg, cb) {
   subject = msg.subject;
   content = msg.content;
 
-  listUser.forEach(async (element) => {
+  listUser.forEach(async (element) => 
+  {
     //console.log(element.lastName, element.firstName, subject, content);
     try {
       let email = await getUserEmail(element.lastName, element.firstName);
       mailSender(email, subject, content);
-    } catch (error) {
+    } 
+    catch (error) 
+    {
       console.log(error);
     }
   });
 
   cb(true);
-}
-
-function getFullName(user){
-  return user.firstName+'.'+user.lastName
 }
 
 // let msg = {
