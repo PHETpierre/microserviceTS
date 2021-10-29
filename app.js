@@ -2,10 +2,11 @@
 const XMLHttpRequest = require('xhr2');
 const express = require("express");
 const nodemailer = require("nodemailer");
-const { test } = require('media-typer');
 
 let app = express();
 app.use(express.urlencoded({ extended: true }));
+
+let resultat
 
 function getUserEmail(lastname,firstname)
 {
@@ -69,13 +70,12 @@ async function mailSender()
 
 async function main()
 {
-	let resultat = await getUserEmail("TOTO","TOTO");
-	console.log(resultat);
-	return resultat;
+	resultat = await getUserEmail("TOTO","TOTO");
 }
 
 app.get("/", (req, response) => {
-	response.status(200).send(main());
+	main();
+	response.status(200).send(resulat);
 })
 
 app.listen(process.env.PORT || 8080, function () {
