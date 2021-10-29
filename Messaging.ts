@@ -71,11 +71,11 @@ function closeOnErr(err:any) {
   return true;
 }
 
-let listUser = new Array();
-let subject = '';
-let content = '';
-
 function work(msg:any, cb:any) {
+  let listUser = new Array();
+  let subject = '';
+  let content = '';
+
   msg = JSON.parse(msg.content);
   console.log("Got msg ", msg);
   msg.users.forEach((element:any) => {
