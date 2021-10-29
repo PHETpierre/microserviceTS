@@ -6,14 +6,13 @@
 //     virtual-host: jjixgyfe
 
 let config: any = {
-    // connection: {
-    //     user: process.env.QUEUE_USERNAME,
-    //     pass: process.env.QUEUE_PASSWORD,
-    //     host: process.env.QUEUE_SERVER || 'localhost',
-    //     port: process.env.QUEUE_PORT || '5672',
-    //     timeout: 2000,
-    //     name: "rabbitmq"
-    // },
+    connection: {
+        user: 'jjixgyfe',
+        pass: 'KI1ImGKoJZs0NNByfOHEJGnV3UbyI339',
+        host: 'amqps://jjixgyfe:KI1ImGKoJZs0NNByfOHEJGnV3UbyI339@rat.rmq2.cloudamqp.com/jjixgyfe',
+        timeout: 2000,
+        name: "rabbitmq"
+    },
     // exchanges: [
     //     {name: "work.tasks.exchange", type: "topic", options: {publishTimeout: 1000, persistent: true, durable: false}},
     //     {name: "work.reply.exchange", type: "topic", options: {publishTimeout: 1000, persistent: true, durable: false}}
@@ -26,14 +25,14 @@ let config: any = {
     //     {exchange: "work.tasks.exchange", target: "work.tasks.queue", keys: "somekey.#"},
     //     {exchange: "work.reply.exchange", target: "work.reply.queue", keys: "otherkey.#"}
     // ],
-    // logging: {
-    //     adapters: {
-    //         stdOut: {
-    //             level: 3,
-    //             bailIfDebug: true
-    //         }
-    //     }
-    // }
+    logging: {
+        adapters: {
+            stdOut: {
+                level: 3,
+                bailIfDebug: true
+            }
+        }
+    }
 };
 
-console.log();
+export default config;
