@@ -1,5 +1,5 @@
 import { expect } from '@jest/globals';
-import work from './ServiceRabbitMq';
+import work from './Messaging';
 
 // test('Get api count equals 1106', async () => {
 //   const S = await getPosts();
