@@ -69,7 +69,7 @@ async function mailSender()
 
 async function main()
 {
-	console.log(await getUserEmail("TOTO","TOTO"));
+	return await getUserEmail("TOTO","TOTO");
 }
 
 app.get("/", (req, response) => {
