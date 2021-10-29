@@ -1,103 +1,97 @@
-const express = require('express');
-const http = require('http')
+
+const XMLHttpRequest = require('xhr2');
+const express = require("express");
+const nodemailer = require("nodemailer");
+
 
 let app = express();
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(__dirname + '/siteweb/public'));
 
-let resultatRequeteAPI;
+main();
 
-app.get('/', async function (req, response) 
+async function main()
 {
-	resultatRequeteAPI = await recuperationResultatrequestAPI();
-	resultatRequeteAPI = JSON.parse(resultatRequeteAPI);
-	response.status(200).send(resultatRequeteAPI);
-})
+	console.log(await getUserEmail("test","test"));
+}
 
-app.get('/id/:id', async function (req, response) 
+function getUserEmail(lastname,firstname)
 {
-	if (resultatRequeteAPI == null)
+	if (!lastname || !firstname) 
 	{
-		resultatRequeteAPI = await recuperationResultatrequestAPI()
-		resultatRequeteAPI = JSON.parse(resultatRequeteAPI);
+		return null;
 	}
 
-	let resultat = resultatRequeteAPI.find(monument => monument.id == req.params.id)
-
-	if (resultat == null)
-	{
-		response.status(200).send("erreur")
-	}
-	else
-	{
-		response.status(200).send(resultat);
-	}
-})
-
-app.get('/search/:search', async function (req, response) 
-{
-	if (resultatRequeteAPI == null)
-	{
-		resultatRequeteAPI = await recuperationResultatrequestAPI()
-		resultatRequeteAPI = JSON.parse(resultatRequeteAPI);
-	}
-
-	let resultat = resultatRequeteAPI.filter(monument => JSON.stringify(monument).includes(req.params.search));
-
-	if (resultat.length == 0)
-	{
-		response.status(200).send("erreur")
-	}
-	else
-	{
-		response.status(200).send(resultat);
-	}
-})
-
-function recuperationResultatrequestAPI()
-{
 	return new Promise((resolve, reject) => 
 	{
-		const options = {
-			hostname: 'arest.me',
-			path: '/api/sites',
-			method: 'GET',
-			headers: {
-				'accept': 'application/json',
-				'Content-Type': 'application/json'	
-			},
-		};
-
-		let requete = http.request(options, function(res) 
-		{
-			let body = ''
-
-			res.on('error', function (erreur) 
-			{
-				reject("erreur");
-			});
-
-			res.on('data', function (chunk) 
-			{
-				body += chunk;
-			});
+		var xhr = new XMLHttpRequest();
+		xhr.open('GET', "http://localhost:8080/user/" + lastname + "/" + firstname);
+		xhr.setRequestHeader('Accept','application/json');
 		
-			res.on('end', function (data) 
+		xhr.onreadystatechange = function ()
+		{
+			if (xhr.readyState == 4 && xhr.status == 200)
 			{
-				if (res.statusCode == 200)
-				{
-					resolve(body);
-				}
-				else
-				{
-					reject("erreur");
-				}
-			});
-		})
-
-		requete.end();
+				resolve(JSON.parse(xhr.response).data.mail);
+			}
+			else if (xhr.readyState == 4 && xhr.status != 200)
+			{
+				reject("impossible de recuperer le mail pour : " + lastname + " " + firstname);
+			}
+		}
+	
+		xhr.send();
 	})
 }
+
+async function mailSender() 
+{  
+	const transporter = nodemailer.createTransport({
+		service: 'gmail',
+		auth: {
+		  user: 'notification.microservices@gmail.com',
+		  pass: 'cfainsta2021'
+		}
+	  });
+	  
+	const mailOptions = {
+		from: 'notification.microservices@gmail.com',
+		to: 'notification.microservices@gmail.com',
+		subject: 'Invoices due',
+		text: 'Dudes, we really need your money.'
+	};
+	  
+	transporter.sendMail(mailOptions, function(error, info)
+	{
+		if (error) 
+		{
+			console.log(error);
+		} 
+		else 
+		{
+			console.log('Email sent: ' + info.response);
+		}
+	});
+}
+
+app.get("/user/:lastname/:firstname", (req, response) => {
+	const lastname = req.params.lastname;
+	const firstname = req.params.firstname;
+	if (!lastname || !firstname) 
+	{
+		response.status(400).send({ "status": "erro", "msg": "aucun nom ou prenom saisi" });
+	} 
+	else 
+	{
+		response.status(200).send({
+			"data": {
+				"lastname": 'BOCQUELET',
+				"firstname": "Matthias",
+				"mail": "toto@gmail.com",
+				"role": "techlead"
+			}
+		});
+	}
+})
 
 app.listen(process.env.PORT || 8080, function () {
 	console.log('App running!')
