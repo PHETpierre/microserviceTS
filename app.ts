@@ -77,7 +77,6 @@ async function main()
 app.get("/", (req, response) => {
 
 	let resultat = main()
-	console.log(resultat);
 	response.status(200).send(resultat);
 })
 
