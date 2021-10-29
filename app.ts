@@ -23,7 +23,7 @@ function getUserEmail(lastname,firstname)
 	return new Promise((resolve, reject) =>
 	{
 		var xhr = new XMLHttpRequest();
-		xhr.open('GET', "http://localhost:8080/user/" + lastname + "/" + firstname);
+		xhr.open('GET', "https://microserviceusers.herokuapp.com/api/user/" + lastname + "/" + firstname);
 		xhr.setRequestHeader('Accept','application/json');
 
 		xhr.onreadystatechange = function ()
