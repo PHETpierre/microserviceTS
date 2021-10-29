@@ -23,11 +23,11 @@ function getUserEmail(lastname,firstname)
 		xhr.onreadystatechange = function ()
 		{
 			console.log(xhr.status)
-			if (xhr.readyState == 4 && xhr.status == 200)
+			if (xhr.readyState == 4 && xhr.status == 201)
 			{
 				resolve(JSON.parse(xhr.response));
 			}
-			else if (xhr.readyState == 4 && xhr.status != 200)
+			else if (xhr.readyState == 4 && xhr.status != 201)
 			{
 				reject("impossible de recuperer le mail pour : " + lastname + " " + firstname);
 			}
