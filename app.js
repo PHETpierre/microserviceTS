@@ -68,13 +68,13 @@ async function mailSender()
 
 async function main()
 {
-	console.log(await getUserEmail("TOTO","TOTO"));
+	return await getUserEmail("TOTO","TOTO");
 }
 
 app.get("/", (req, response) => {
 
-	main()
-	response.status(200).send("ok");
+	let resultat = main()
+	response.status(200).send(resultat);
 })
 
 app.listen(process.env.PORT || 8080, function () {
