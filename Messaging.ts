@@ -1,5 +1,6 @@
 //import config from './RabbitMqConfig';
 import amqp from 'amqplib/callback_api';
+const { getUserEmail, mailSender } = require('./UserProvider');
 
 var amqpConn:any = null;
 
@@ -39,10 +40,10 @@ function startWorker(){
    });
 
    ch.prefetch(10);
-   ch.assertQueue("deal", { durable: true }, function(err:any, _ok:any) {
+   ch.assertQueue("notification", { durable: true }, function(err:any, _ok:any) {
      if (closeOnErr(err)) return;
      //ch.bindQueue(_ok.queue, 'deal', 'notification');
-     ch.consume("deal", processMsg, { noAck: false });
+     ch.consume("notification", processMsg, { noAck: false });
      console.log("Worker is started");
    });
 
@@ -70,25 +71,30 @@ function closeOnErr(err:any) {
 
 let listUser = new Array();
 const work = function work(msg:any, cb:any) {
-  //console.log("Got msg ", msg.content);
-  msg = JSON.parse(msg);
-  listUser.push(msg.dealCreator);
+  console.log("Got msg ", msg.content);
+  msg = JSON.parse(msg.content);
   msg.dealStakeholders.forEach((element:any) => {
     listUser.push(element);
   });
-  //console.log("Got msg ", msg);
-  //console.log("List user ", listUser);
-  //cb(true);
+  console.log("Got msg ", msg);
+  cb(true);
 }
 
-function getFullName(listUser:any){
-  listUser.forEach((element:any) => {
-    console.log(element.firstName, element.lastName);
-  });
+function getFullName(user:any){
+  return user.firstName+'.'+user.lastName
 }
 
-//start();
-let msg:string = '{"zone":"ASIA","dealCreator":{"firstName":"Quan","lastName":"Nguyen","role":"SENDER"},"dealStakeholders":[{"firstName":"Astrid","lastName":"Passot","role":"DEALER"},{"firstName":"Said","lastName":"Kabene","role":"DEALER"}],"code":"LHAJEZJEHZJ","name":"test","amount":200000.0,"currency":"USD"}';
-work(msg, null);
-getFullName(listUser);
+start();
+
+// let msg:string = '{"zone":"ASIA","dealCreator":{"firstName":"Quan","lastName":"Nguyen","role":"SENDER"},"dealStakeholders":[{"firstName":"Astrid","lastName":"Passot","role":"DEALER"},{"firstName":"Said","lastName":"Kabene","role":"DEALER"}],"code":"LHAJEZJEHZJ","name":"test","amount":200000.0,"currency":"USD"}';
+// work(msg, null);
+//
+// listUser.forEach(async (element:any) => {
+//   try {
+//     let email:string = await getUserEmail(element.lastName, element.firstName);
+//     mailSender(email, '', '');
+//   } catch (error) {
+//     console.log(error);
+//   }
+// });
 export default work;
