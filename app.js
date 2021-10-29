@@ -6,13 +6,6 @@ const nodemailer = require("nodemailer");
 let app = express();
 app.use(express.urlencoded({ extended: true }));
 
-main();
-
-async function main()
-{
-	console.log(await getUserEmail("test","test"));
-}
-
 function getUserEmail(lastname,firstname)
 {
 	if (!lastname || !firstname)
@@ -23,16 +16,17 @@ function getUserEmail(lastname,firstname)
 	return new Promise((resolve, reject) =>
 	{
 		var xhr = new XMLHttpRequest();
-		xhr.open('GET', "http://localhost:8080/user/" + lastname + "/" + firstname);
+		xhr.open('GET', "https://microserviceusers.herokuapp.com/api/user/" + lastname + "/" + firstname);
 		xhr.setRequestHeader('Accept','application/json');
 
 		xhr.onreadystatechange = function ()
 		{
-			if (xhr.readyState == 4 && xhr.status == 200)
+			console.log(xhr.status)
+			if (xhr.readyState == 4 && xhr.status == 201)
 			{
 				resolve(JSON.parse(xhr.response).data.mail);
 			}
-			else if (xhr.readyState == 4 && xhr.status != 200)
+			else if (xhr.readyState == 4 && xhr.status != 201)
 			{
 				reject("impossible de recuperer le mail pour : " + lastname + " " + firstname);
 			}
@@ -72,24 +66,14 @@ async function mailSender()
 	});
 }
 
-app.get("/user/:lastname/:firstname", (req, response) => {
-	const lastname = req.params.lastname;
-	const firstname = req.params.firstname;
-	if (!lastname || !firstname)
-	{
-		response.status(400).send({ "status": "erro", "msg": "aucun nom ou prenom saisi" });
-	}
-	else
-	{
-		response.status(200).send({
-			"data": {
-				"lastname": 'BOCQUELET',
-				"firstname": "Matthias",
-				"mail": "toto@gmail.com",
-				"role": "techlead"
-			}
-		});
-	}
+async function main()
+{
+	console.log(await getUserEmail("TOTO","TOTO"));
+}
+
+app.get("/", (req, response) => {
+	main();
+	response.status(200).send("ok");
 })
 
 app.listen(process.env.PORT || 8080, function () {
