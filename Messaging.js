@@ -3,14 +3,14 @@
 const amqp = require('amqplib/callback_api')
 const { getUserEmail, mailSender } = require('./UserProvider');
 
-var amqpConn:any = null;
+var amqpConn = null;
 
 function start(){
-  amqp.connect('amqps://jjixgyfe:KI1ImGKoJZs0NNByfOHEJGnV3UbyI339@rat.rmq2.cloudamqp.com/jjixgyfe', function(err:any, conn:any) {
+  amqp.connect('amqps://jjixgyfe:KI1ImGKoJZs0NNByfOHEJGnV3UbyI339@rat.rmq2.cloudamqp.com/jjixgyfe', function(err, conn) {
     if (err) {
       console.error("[AMQP]", err.message);
     }
-    conn.on("error", function(err:any) {
+    conn.on("error", function(err) {
       if (err.message !== "Connection closing") {
         console.error("[AMQP] conn error", err.message);
       }
@@ -30,9 +30,9 @@ function whenConnected() {
 }
 
 function startWorker(){
-  amqpConn.createChannel(function(err:any, ch:any) {
+  amqpConn.createChannel(function(err, ch) {
    if (closeOnErr(err)) return;
-   ch.on("error", function(err:any) {
+   ch.on("error", function(err) {
      console.error("[AMQP] channel error", err.message);
    });
 
@@ -43,15 +43,15 @@ function startWorker(){
    //ch.assertExchange('', 'direct');
 
    ch.prefetch(10);
-   ch.assertQueue("notification", { durable: true }, function(err:any, _ok:any) {
+   ch.assertQueue("notification", { durable: true }, function(err, _ok) {
      if (closeOnErr(err)) return;
      //ch.bindQueue(_ok.queue, 'deal', 'notification');
      ch.consume("notification", processMsg, { noAck: false });
      console.log("Worker is started");
    });
 
-   function processMsg(msg:any) {
-     work(msg, function(ok:any) {
+   function processMsg(msg) {
+     work(msg, function(ok) {
        try {
          if (ok)
            ch.ack(msg);
@@ -65,30 +65,30 @@ function startWorker(){
  });
 }
 
-function closeOnErr(err:any) {
+function closeOnErr(err) {
   if (!err) return false;
   console.error("[AMQP] error", err);
   amqpConn.close();
   return true;
 }
 
-function work(msg:any, cb:any) {
+function work(msg, cb) {
   let listUser = new Array();
   let subject = '';
   let content = '';
 
   msg = JSON.parse(msg.content);
   console.log("Got msg ", msg);
-  msg.users.forEach((element:any) => {
+  msg.users.forEach((element) => {
     listUser.push(element);
   });
   subject = msg.subject;
   content = msg.content;
 
-  listUser.forEach(async (element:any) => {
+  listUser.forEach(async (element) => {
     //console.log(element.lastName, element.firstName, subject, content);
     try {
-      let email:string = await getUserEmail(element.lastName, element.firstName);
+      let email = await getUserEmail(element.lastName, element.firstName);
       mailSender(email, subject, content);
     } catch (error) {
       console.log(error);
@@ -98,7 +98,7 @@ function work(msg:any, cb:any) {
   cb(true);
 }
 
-function getFullName(user:any){
+function getFullName(user){
   return user.firstName+'.'+user.lastName
 }
 
