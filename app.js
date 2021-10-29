@@ -25,6 +25,7 @@ function getUserEmail(lastname,firstname)
 			console.log(xhr.status)
 			if (xhr.readyState == 4 && xhr.status == 201)
 			{
+				console.log("ok")
 				resolve(JSON.parse(xhr.response));
 			}
 			else if (xhr.readyState == 4 && xhr.status != 201)
