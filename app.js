@@ -6,8 +6,6 @@ const nodemailer = require("nodemailer");
 let app = express();
 app.use(express.urlencoded({ extended: true }));
 
-let resultat
-
 function getUserEmail(lastname,firstname)
 {
 	if (!lastname || !firstname)
